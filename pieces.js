@@ -2,6 +2,8 @@
 const reponse = await fetch('pieces-autos.json');
 const pieces = await reponse.json();
 
+const prixAbordable = 35;
+
 function genererPieces(pieces){
     for (let i = 0; i < pieces.length; i++) {
 
@@ -16,7 +18,7 @@ function genererPieces(pieces){
         const nomElement = document.createElement("h2");
         nomElement.innerText = article.nom;
         const prixElement = document.createElement("p");
-        prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`;
+        prixElement.innerText = `Prix: ${article.prix} € (${article.prix < prixAbordable ? "€" : "€€€"})`;
         const categorieElement = document.createElement("p");
         categorieElement.innerText = article.categorie ?? "(aucune catégorie)";
         const descriptionElement = document.createElement("p");
@@ -60,7 +62,7 @@ const boutonFiltrer = document.querySelector(".btn-filtrer");
 
 boutonFiltrer.addEventListener("click", function () {
     const piecesFiltrees = pieces.filter(function (piece) {
-        return piece.prix <= 35;
+        return piece.prix <= prixAbordable;
     });
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);
@@ -88,12 +90,20 @@ boutonNoDescription.addEventListener("click", function () {
     genererPieces(piecesFiltrees);
 });
 
+const boutonReset = document.querySelector(".btn-reset");
+boutonReset.addEventListener("click", function () {
+    document.querySelector('.fiches').innerHTML = "";
+    genererPieces(pieces);
+});
+
+// Liste contenant le nom des pièces
 const noms = pieces.map(piece => piece.nom);
 for(let i = pieces.length -1 ; i >= 0; i--){
-    if(pieces[i].prix > 35){
+    if(pieces[i].prix > prixAbordable){
         noms.splice(i,1);
     }
 }
+// après traitement de la boucle for nos n'avons plus que les pièces abordables
 console.log(noms)
 //Création de l'en-tête
 
