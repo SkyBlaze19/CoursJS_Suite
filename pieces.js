@@ -43,8 +43,6 @@ function genererPieces(pieces){
         pieceElement.appendChild(stockElement);
         //Code aJouté
         pieceElement.appendChild(avisBouton);
-    
-        ajoutListenersAvis();
      }
      ajoutListenersAvis();
 }
