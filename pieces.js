@@ -1,7 +1,7 @@
 import { ajoutListenersAvis } from "./avis.js";
 
 // Récupération des pièces depuis le fichier JSON
-const reponse = await fetch('pieces-autos.json');
+const reponse = await fetch('http://localhost:8081/pieces/');
 const pieces = await reponse.json();
 
 const prixAbordable = 35;
@@ -45,6 +45,7 @@ function genererPieces(pieces){
     
         ajoutListenersAvis();
      }
+     ajoutListenersAvis();
 }
 
 genererPieces(pieces);
@@ -156,4 +157,3 @@ inputPrixMax.addEventListener('input', function(){
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);  
 })
-
