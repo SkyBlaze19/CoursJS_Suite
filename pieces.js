@@ -1,8 +1,27 @@
-import { ajoutListenersAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
+import { ajoutListenersAvis, ajoutListenerEnvoyerAvis, afficherAvis } from "./avis.js";
 
-// Récupération des pièces depuis le fichier JSON
-const reponse = await fetch('http://localhost:8081/pieces/');
-const pieces = await reponse.json();
+
+// Récupération des pièces éventuellement stockées dans le localStorage
+let pieces = window.localStorage.getItem('pieces');
+console.log(pieces);
+if (pieces === null){
+    console.log(pieces);
+    // Récupération des pièces depuis l'API //le fichier JSON
+    const reponse = await fetch('http://localhost:8081/pieces/');
+    pieces = await reponse.json();
+    // Transformation des pièces en JSON
+    const valeurPieces = JSON.stringify(pieces);
+    // Stockage des informations dans le localStorage
+    window.localStorage.setItem("pieces", valeurPieces);
+}
+else {
+    pieces = JSON.parse(JSON.parse(JSON.parse(JSON.parse(JSON.parse(pieces)))));
+    console.log(pieces);
+}
+
+// Exemple d'utilisation du local storage
+//const nomEntreprise = window.localStorage.getItem("nom");
+//window.localStorage.removeItem("nom");
 
 ajoutListenerEnvoyerAvis();
 const prixAbordable = 35;
@@ -48,6 +67,18 @@ function genererPieces(pieces){
 }
 
 genererPieces(pieces);
+
+for (let i = 0; i < pieces.length; i++)
+{
+    const id = pieces[i].id;
+    const avisJSON = window.localStorage.getItem(`avis-piece-${id}`);
+    const avis = JSON.parse(avisJSON);
+
+    if (avis !== null) {
+        const pieceElement = document.querySelector(`article[data-id="${id}"]`);
+        afficherAvis(pieceElement, avis);
+    }
+}
 
  //gestion des bouttons 
 const boutonTrier = document.querySelector(".btn-trier");
@@ -99,6 +130,7 @@ boutonReset.addEventListener("click", function () {
     genererPieces(pieces);
 });
 
+
 // Liste contenant le nom des pièces
 const noms = pieces.map(piece => piece.nom);
 for(let i = pieces.length -1 ; i >= 0; i--){
@@ -122,8 +154,8 @@ for(let i=0; i < noms.length ; i++){
 }
 // Ajout de l'en-tête puis de la liste au bloc résultats filtres
 document.querySelector('.abordables')
-    .appendChild(pElement)
-    .appendChild(abordablesElements);
+.appendChild(pElement)
+.appendChild(abordablesElements);
 
 //Code Exercice 
 const nomsDisponibles = pieces.map(piece => piece.nom)
@@ -156,3 +188,9 @@ inputPrixMax.addEventListener('input', function(){
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);  
 })
+
+// Ajout du listener pour mettre à jour des données du localStorage
+const boutonMettreAJour = document.querySelector(".btn-maj");
+boutonMettreAJour.addEventListener("click", function () {
+  window.localStorage.removeItem("pieces");
+});
